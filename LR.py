@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from activation import sigmoid
+from activation import sigmoid, sigmoid_derivative
 
 np.set_printoptions(threshold=np.inf)
 
@@ -16,15 +16,15 @@ X = data_set.drop('type', 1).values
 Y = data_set['type'].values
 Y = Y.reshape((Y.shape[0], 1))
 file = 'iris.npz'
-a = np.array([[0, 1]])
+a = np.array([[0, 1, 0]])
 for x in Y:
     if x == 1:
-        a = np.append(a, np.array([[0, 1]]), axis=0)
+        a = np.append(a, np.array([[0, 0, 1]]), axis=0)
     elif x == 2:
-        a = np.append(a, np.array([[1, 0]]), axis=0)
+        a = np.append(a, np.array([[0, 1, 0]]), axis=0)
     elif x == 3:
-        a = np.append(a, np.array([[1, 1]]), axis=0)
-Y = np.delete(a, 0, axis=0)
+        a = np.append(a, np.array([[1, 0, 0]]), axis=0)
+Y = np.delete(a, 0, axis=0).T
 
 
 class LR(object):
@@ -36,7 +36,7 @@ class LR(object):
             self.w = np.load(file)['w']
             self.b = np.load(file)['b']
 
-        self.learning_rate = 0.05
+        self.learning_rate = 0.18
         self.dz = 0
 
     def forward(self, x):
@@ -46,7 +46,7 @@ class LR(object):
 
     def backward(self, x, y, o):
         m = x.shape[0]
-        self.dz = o - y.T
+        self.dz = o - y
         dw = np.matmul(self.dz, x) / m
         db = np.sum(self.dz) / m
         a = np.multiply(self.learning_rate, dw)
@@ -59,24 +59,24 @@ class LR(object):
 
     @staticmethod
     def cost(y, t):
-        return - np.multiply(t, np.log(y.T)).sum()
+        return - np.multiply(t, np.log(y)).sum()
 
 
-n = LR(4, 2, file)
+n = LR(4, 3, file)
 
 
 def lr_test(x):
     o = n.forward(x)
-    print("%.5f %.5f" % (o[0][0], o[0][1]))
+    print("%.5f %.5f %.5f" % (o[0][0], o[0][1], o[0][2]))
 
 
 def lr_train():
-    for i in range(200000):
+    for i in range(20000):
         n.train(X, Y)
         print(n.cost(n.forward(X), Y))
 
 
 if __name__ == '__main__':
     # lr_train()
-    lr_test(X[126])
+    lr_test(X[30])
     np.savez(file, w=n.w, b=n.b)
