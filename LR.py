@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from activation import sigmoid, sigmoid_derivative
+from activation import *
 
 np.set_printoptions(threshold=np.inf)
 
@@ -19,17 +19,17 @@ file = 'iris.npz'
 a = np.array([[0, 1, 0]])
 for x in Y:
     if x == 1:
-        a = np.append(a, np.array([[0, 0, 1]]), axis=0)
+        a = np.append(a, np.array([[0, 0, 1]], dtype=np.float64), axis=0)
     elif x == 2:
-        a = np.append(a, np.array([[0, 1, 0]]), axis=0)
+        a = np.append(a, np.array([[0, 1, 0]], dtype=np.float64), axis=0)
     elif x == 3:
-        a = np.append(a, np.array([[1, 0, 0]]), axis=0)
+        a = np.append(a, np.array([[1, 0, 0]], dtype=np.float64), axis=0)
 Y = np.delete(a, 0, axis=0).T
 
 
 class LR(object):
-    def __init__(self, inputs=2, outputs=1, file=None):
-        if file is None:
+    def __init__(self, inputs=2, outputs=1, readFile=None):
+        if readFile is None:
             self.w = np.random.randn(outputs, inputs)
             self.b = np.zeros([outputs, 1])
         else:
@@ -77,6 +77,6 @@ def lr_train():
 
 
 if __name__ == '__main__':
-    # lr_train()
-    lr_test(X[30])
+    lr_train()
+    # lr_test(X[30])
     np.savez(file, w=n.w, b=n.b)
