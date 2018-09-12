@@ -1,17 +1,16 @@
 import numpy as np
 
-__all__ = {
+__all__ = [
     'sigmoid',
     'relu',
-    'sigmoid_derivative',
-    'softmax'
-}
+    'sigmoid_derivative'
+]
 
 
 def sigmoid(x):
     for i in range(len(x)):
         x[i] = 1 / (1 + np.exp(-x[i]))
-        return x
+    return x
 
 
 def sigmoid_derivative(x):
@@ -24,5 +23,5 @@ def relu(x):
     return x
 
 
-def softmax(x):
+def softmax (x):
     return np.exp(x) / np.sum(np.exp(x))
