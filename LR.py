@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from activation import sigmoid, sigmoid_derivative
+from activation import sigmoid
 
 np.set_printoptions(threshold=np.inf)
 
@@ -16,46 +16,46 @@ X = data_set.drop('type', 1).values
 Y = data_set['type'].values
 Y = Y.reshape((Y.shape[0], 1))
 file = 'iris.npz'
-a = np.array([[0, 1, 0]])
+tmp = np.array([[0, 1, 0]])
 for x in Y:
     if x == 1:
-        a = np.append(a, np.array([[0, 0, 1]]), axis=0)
+        tmp = np.append(tmp, np.array([[0, 0, 1]]), axis=0)
     elif x == 2:
-        a = np.append(a, np.array([[0, 1, 0]]), axis=0)
+        tmp = np.append(tmp, np.array([[0, 1, 0]]), axis=0)
     elif x == 3:
-        a = np.append(a, np.array([[1, 0, 0]]), axis=0)
-Y = np.delete(a, 0, axis=0).T
+        tmp = np.append(tmp, np.array([[1, 0, 0]]), axis=0)
+Y = np.delete(tmp, 0, axis=0).T
 
 
 class LR(object):
-    def __init__(self, inputs=2, outputs=1, file=None):
+    def __init__(self, inputs=2, outputs=1, file_name=None):
         if file is None:
             self.w = np.random.randn(outputs, inputs)
             self.b = np.zeros([outputs, 1])
         else:
-            self.w = np.load(file)['w']
-            self.b = np.load(file)['b']
+            self.w = np.load(file_name)['w']
+            self.b = np.load(file_name)['b']
 
         self.learning_rate = 0.18
         self.dz = 0
 
-    def forward(self, x):
-        output = np.matmul(self.w, x.T) + self.b
+    def forward(self, input_data):
+        output = np.matmul(self.w, input_data.T) + self.b
         output = sigmoid(output)
         return output
 
-    def backward(self, x, y, o):
-        m = x.shape[0]
+    def backward(self, input_data, y, o):
+        m = input_data.shape[0]
         self.dz = o - y
-        dw = np.matmul(self.dz, x) / m
+        dw = np.matmul(self.dz, input_data) / m
         db = np.sum(self.dz) / m
         a = np.multiply(self.learning_rate, dw)
         self.w -= a
         self.b -= db * self.learning_rate
 
-    def train(self, x, y):
-        o = self.forward(x)
-        self.backward(x, y, o)
+    def train(self, test_input, y):
+        o = self.forward(test_input)
+        self.backward(test_input, y, o)
 
     @staticmethod
     def cost(y, t):
@@ -65,8 +65,8 @@ class LR(object):
 n = LR(4, 3, file)
 
 
-def lr_test(x):
-    o = n.forward(x)
+def lr_test(test_set):
+    o = n.forward(test_set)
     print("%.5f %.5f %.5f" % (o[0][0], o[0][1], o[0][2]))
 
 
