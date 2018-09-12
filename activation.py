@@ -23,5 +23,5 @@ def relu(x):
     return x
 
 
-def softmax (x):
+def softmax(x):
     return np.exp(x) / np.sum(np.exp(x))

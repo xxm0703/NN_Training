@@ -1,19 +1,7 @@
 import numpy as np
 from activation import sigmoid, sigmoid_derivative
 
-__all__ = ['HL',
-           'Layer']
-
-
-class Layer(object):
-    def __init__(self, inputs, classes):
-        self.w = np.random.randn(classes, inputs)
-        self.b = np.zeros([classes, 1])
-        self.a = None
-        self.z = None
-        self.dz = None
-        self.dw = None
-        self.db = None
+__all__ = ['HL']
 
 
 class HL(object):
