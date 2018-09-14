@@ -1,5 +1,6 @@
 import numpy as np
 from activation import sigmoid, sigmoid_derivative
+from utils import *
 
 __all__ = ['HL']
 
@@ -20,30 +21,21 @@ class HL(object):
         self.learning_rate = 0.4
 
     def forward(self, x):
-        output = x.T
-        for l in self.layers:
-            l.z = np.matmul(l.w, output) + l.b
-            l.a = sigmoid(l.z)
-            output = l.a
-        return output
+        o = x
+        for layer in self.layers:
+            o = layer.forward_propagation(o)
+        return o
 
-    def backward(self, x, y, o):
-        m = x.shape[0]
-        self.layers[1].dz = o - y
-        self.layers[1].dw = np.matmul(self.layers[1].dz, self.layers[0].a.T) / m
-        self.layers[1].db = np.sum(self.layers[1].dz) / m
-        self.layers[0].dz = np.matmul(self.layers[1].w.T, self.layers[1].dz) * sigmoid_derivative(self.layers[0].a)
-        self.layers[0].dw = np.matmul(self.layers[0].dz, x) / m
-        self.layers[0].db = np.sum(self.layers[0].dz) / m
-        for l in self.layers:
-            l.w -= l.dw * self.learning_rate
-            l.b -= l.db * self.learning_rate
+    def backward(self, y, output):
+        da = self.cost(output, y)
+        for layer in self.layers:
+            da = layer.back_propagation(da, self.learning_rate)
 
     def train(self, x, y):
         o = self.forward(x)
         self.backward(x, y, o)
 
     @staticmethod
-    def cost(y, t):
-        loss = - t * np.log(y) - (1 - t) * np.log(1 - y)
+    def cost(output, t):
+        loss = - output / t + (1 - output) / (1 - t)
         return np.sum(loss) / t.shape[0]
