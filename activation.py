@@ -7,21 +7,36 @@ __all__ = [
 ]
 
 
-def sigmoid(x):
-    for i in range(len(x)):
-        x[i] = 1 / (1 + np.exp(-x[i]))
-    return x
+class Activation:
+
+    def activate(self, x):
+        pass
+
+    def derivative(self, x):
+        pass
 
 
-def sigmoid_derivative(x):
-    return sigmoid(x) * (1.0 - sigmoid(x))
+class Sigmoid(Activation):
+
+    def activate(self, x):
+        for i in range(len(x)):
+            x[i] = 1 / (1 + np.exp(-x[i]))
+        return x
+
+    def derivative(self, x):
+        return self.activate(x) * (1.0 - self.activate(x))
 
 
-def relu(x):
-    for i in range(len(x)):
-        x[i] = max(0, x[i])
-    return x
+class ReLU(Activation):
+    def activate(self, x):
+        for i in range(len(x)):
+            x[i] = max(0, x[i])
+        return x
+
+    def derivative(self, x):
+        return 0 if x < 0 else 1
 
 
-def softmax(x):
-    return np.exp(x) / np.sum(np.exp(x))
+class SoftMax(Activation):
+    def activate(self, x):
+        return np.exp(x) / np.sum(np.exp(x))
