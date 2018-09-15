@@ -14,7 +14,7 @@ class HL(object):
     def __init__(self, inputs=2, hidden_units=4, classes=2, read_file=None):
 
         if read_file is None:
-            self.layers = [Layer(inputs, hidden_units,), Layer(hidden_units, classes)]
+            self.layers = [Layer(inputs, hidden_units, Sigmoid), Layer(hidden_units, classes, Sigmoid)]
         else:
             self.layers = np.load(read_file)['HL']
 
@@ -39,3 +39,7 @@ class HL(object):
     def cost(output, t):
         loss = - output / t + (1 - output) / (1 - t)
         return np.sum(loss) / t.shape[0]
+
+
+if __name__ == '__main__':
+    model = HL()
