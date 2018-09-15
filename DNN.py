@@ -2,30 +2,8 @@ import numpy as np
 from activation import *
 
 
-class Layer(object):
-    def __init__(self, inputs, nodes):
-        self.weights = np.random.randn([nodes, inputs])
-        self.bias = np.zeros([nodes, 1])
-        self.a = None
-        self.z = None
-        self.dz = None
-        self.da = None
-        self.dw = None
-        self.db = None
-
-    def calculate(self, x):
-        self.z = np.add(np.matmul(self.weights, x.T), self.bias)
-        self.a = sigmoid(self.z)
-
-    def derivatives(self):
-        pass
-
-    def error(self, expected):
-        (expected - self.z) * sigmoid_derivative(self.z)
-
-
 class NN(object):
-    def __init__(self, inputs=2, classes=1, hidden_layers=1, nodes=[2]):
+    def __init__(self, inputs=2, classes=1, hidden_layers=1, nodes=(2,)):
         self.n_inputs = inputs
         self.n_classes = classes
         self.n_hidden = hidden_layers

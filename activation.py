@@ -1,9 +1,9 @@
 import numpy as np
 
 __all__ = [
-    'sigmoid',
-    'relu',
-    'sigmoid_derivative'
+    'Sigmoid',
+    'ReLU',
+    'SoftMax'
 ]
 
 

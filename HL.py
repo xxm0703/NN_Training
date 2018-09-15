@@ -1,5 +1,5 @@
 import numpy as np
-from activation import sigmoid, sigmoid_derivative
+from activation import *
 from utils import *
 
 __all__ = ['HL']
@@ -14,7 +14,7 @@ class HL(object):
     def __init__(self, inputs=2, hidden_units=4, classes=2, read_file=None):
 
         if read_file is None:
-            self.layers = [Layer(inputs, hidden_units), Layer(hidden_units, classes)]
+            self.layers = [Layer(inputs, hidden_units,), Layer(hidden_units, classes)]
         else:
             self.layers = np.load(read_file)['HL']
 
@@ -33,7 +33,7 @@ class HL(object):
 
     def train(self, x, y):
         o = self.forward(x)
-        self.backward(x, y, o)
+        self.backward(y, o)
 
     @staticmethod
     def cost(output, t):
