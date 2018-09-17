@@ -19,12 +19,9 @@ class Cost(object):
         return cost
 
     def softmax_classification(self):
-        s = 0
         c = 0
         for i in range(len(self.output)):
-            for j in range(len(self.output[i])):
-                s += self.target[i][j] * np.log(self.output[i][j])
-            c += -s
+            c += -np.sum(self.target[i]*np.log(self.output[i]))
         return c / self.output.shape[0]
 
     def mean_squared_error(self):

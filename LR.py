@@ -1,7 +1,8 @@
 import numpy as np
 import pandas as pd
 
-from activation import sigmoid
+from activation import Sigmoid
+from utils import Cost
 
 np.set_printoptions(threshold=np.inf)
 
@@ -38,10 +39,11 @@ class LR(object):
 
         self.learning_rate = 0.18
         self.dz = 0
+        self.sigmoid = Sigmoid()
 
     def forward(self, input_data):
         output = np.matmul(self.w, input_data.T) + self.b
-        output = sigmoid(output)
+        output = self.sigmoid.activate(output)
         return output
 
     def backward(self, input_data, y, o):
@@ -59,7 +61,8 @@ class LR(object):
 
     @staticmethod
     def cost(y, t):
-        return - np.multiply(t, np.log(y)).sum()
+        return Cost(y, t).softmax_classification()
+        # return - np.multiply(t, np.log(y)).sum()
 
 
 n = LR(4, 3, file)

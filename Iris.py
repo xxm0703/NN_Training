@@ -1,6 +1,3 @@
-import numpy as np
-import pandas as pd
-
 from LR import *
 from HL import *
 
@@ -42,6 +39,6 @@ def lr_train():
 
 
 if __name__ == '__main__':
-    lr_train()
+    # lr_train()
     lr_test(X[131])
     np.savez(file, w=n.w, b=n.b)
