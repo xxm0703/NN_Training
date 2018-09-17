@@ -1,8 +1,34 @@
 import numpy as np
 
 __all__ = [
-    'Layer'
+    'Layer',
+    'Cost'
 ]
+
+
+class Cost(object):
+    def __init__(self, output, target):
+        self.output = output
+        self.target = target
+
+    def binary_classification(self):
+        class1_cost = -self.target * np.log(self.output)
+        class2_cost = (1 - self.target) * np.log(1 - self.output)
+        cost = class1_cost - class2_cost
+        cost = cost.sum() / len(self.target)
+        return cost
+
+    def softmax_classification(self):
+        s = 0
+        c = 0
+        for i in range(len(self.output)):
+            for j in range(len(self.output[i])):
+                s += self.target[i][j] * np.log(self.output[i][j])
+            c += -s
+        return c / self.output.shape[0]
+
+    def mean_squared_error(self):
+        return np.sum((self.output - self.target) ** 2) / len(self.output)
 
 
 class Layer(object):
@@ -29,4 +55,3 @@ class Layer(object):
     def forward_propagation(self):
         self.z = np.matmul(self.w, self.a) + self.b
         return self.activation.activate(self.z)
-
